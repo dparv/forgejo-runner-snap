@@ -15,6 +15,15 @@ description: |
   by polling a Forgejo instance for tasks, running them, and reporting results.
   This snap allows for containerized automation and is integrated with Docker (also snap)
   for job execution.
+  To use the snap, configure it with the host URL of your Forgejo instance and a secret token
+  snap set forgejo-runner host="<HOST>" secret="<SECRET>"
+
+  The registration secret for the runner. Mind that this is NOT
+  as the token. This secret is obtained by running the forgejo-cli command
+  on the Forgejo server, as an example below:
+
+  `forgejo forgejo-cli actions register --secret $SECRET`
+  `forgejo forgejo-cli actions register --secret $SECRET --labels "docker"`
 
 grade: stable
 confinement: strict
