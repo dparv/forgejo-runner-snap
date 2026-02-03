@@ -1,0 +1,61 @@
+name: forgejo-runner
+title: Forgejo Runner
+base: core24
+version: 12.6.3
+summary: A daemon that connects to a Forgejo instance and runs jobs for CI.
+contact: diko.parvanov@canonical.com
+issues: https://github.com/dparv/forgejo-runner-snap/issues
+license: BSD-3-Clause
+source-code: https://code.forgejo.org/forgejo/runner
+website: https://forgejo.org/docs/next/admin/actions/#forgejo-runner
+donation: https://liberapay.com/forgejo
+
+description: |
+  The Forgejo Runner is a lightweight daemon that executes CI/CD jobs (Forgejo Actions)
+  by polling a Forgejo instance for tasks, running them, and reporting results.
+  This snap allows for containerized automation and is integrated with Docker (also snap)
+  for job execution.
+
+grade: stable
+confinement: strict
+
+parts:
+  forgejo-runner:
+    plugin: go
+    source: https://code.forgejo.org/forgejo/runner.git
+    source-tag: v$SNAPCRAFT_PROJECT_VERSION
+    build-snaps: [go]
+    override-build: |
+      make build
+      mkdir -p "${SNAPCRAFT_PART_INSTALL}/bin"
+      cp -p "${SNAPCRAFT_PART_BUILD}/forgejo-runner" "${SNAPCRAFT_PART_INSTALL}/bin/"
+    stage:
+      - bin/forgejo-runner
+  config:
+    plugin: dump
+    source: snap/local/
+    organize:
+      default-config.yaml: .
+
+
+hooks:
+  configure:
+    plugs: [network, docker, docker-executables]
+
+apps:
+  forgejo-runner:
+    command: bin/forgejo-runner daemon --config $SNAP_COMMON/forgejo-config.yaml
+    daemon: simple
+    environment:
+      PATH: $SNAP/docker-snap/bin:$PATH
+    plugs:
+      - network
+      - docker
+      - docker-executables
+
+plugs:
+  docker-executables:
+    interface: content
+    content: docker-executables
+    target: $SNAP/docker-snap
+    default-provider: docker

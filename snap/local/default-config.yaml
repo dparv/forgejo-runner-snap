@@ -1,0 +1,41 @@
+log:
+  level: info
+  job_level: info
+
+runner:
+  file: /var/snap/forgejo-runner/common/.runner
+  capacity: 1
+  env_file: /var/snap/forgejo-runner/common/.env
+  timeout: 3h
+  shutdown_timeout: 3h
+  insecure: false
+  fetch_timeout: 5s
+  fetch_interval: 2s
+  report_interval: 1s
+  labels: ["docker"]
+
+cache:
+  enabled: true
+  port: 0
+  dir: ""
+  external_server: ""
+  secret: ""
+  host: ""
+  proxy_port: 0
+  actions_cache_url_override: ""
+
+container:
+  network: ""
+  enable_ipv6: false
+  privileged: true
+  options:
+  workdir_parent:
+  valid_volumes:
+    - /dev/net/tun
+    - /cache
+  docker_host: "-"
+  force_pull: false
+  force_rebuild: false
+
+host:
+  workdir_parent:

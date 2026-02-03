@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+host="$(snapctl get host)"
+secret="$(snapctl get secret)"
+
+if [ "$(which docker)" = "" ]; then
+    snap install docker || true
+fi
+
+if [ -z "$host" -o -z "$secret" ]; then
+    echo "Both `snap set forgejo-runner host` and `snap set forgejo-runner secret` are needed to configure the runner."
+    exit 0
+fi
+
+$SNAP/bin/forgejo-runner create-runner-file --instance $host --secret $secret --name "$(hostname)-runner" -c $SNAP_COMMON/forgejo-config.yaml
+
+snapctl restart $SNAP_NAME.forgejo-runner

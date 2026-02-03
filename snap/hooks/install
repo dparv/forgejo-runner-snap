@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Write out a default configuration for the service if it doesn't already exist.
+if [ ! -e "$SNAP_COMMON/forgejo-config.yaml" ]; then
+    cp $SNAP/default-config.yaml "$SNAP_COMMON/forgejo-config.yaml"
+fi
+
