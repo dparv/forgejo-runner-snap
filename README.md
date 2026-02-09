@@ -67,6 +67,12 @@ Two snap settings are required:
 - `host`: Forgejo instance URL (e.g. `https://forgejo.example.com`)
 - `secret`: runner registration secret from Forgejo
 
+NB! The secret is NOT the forgejo runner registraion token, but obtained by running the following commands on the Forgejo server:
+```
+SECRET=$(forgejo forgejo-cli actions generate-secret)
+forgejo forgejo-cli actions register --secret $SECRET --labels "docker" --labels "runner" # etc.
+```
+
 Set them like this:
 
 ```bash
